@@ -9,4 +9,4 @@ Learn how to make animated charts in React Native.
 
 ## Demo
 
-<img src="https://github.com/rationalappdev/react-native-charts-tutorial/blob/master/demo.jpg" alt="Demo" width="640" />
+<img src="https://github.com/rationalappdev/react-native-charts-tutorial/blob/master/demo.png" alt="Demo" width="640" />
