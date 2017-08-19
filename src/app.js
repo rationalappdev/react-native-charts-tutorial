@@ -1,39 +1,43 @@
 import React, { Component } from 'react';
-import {
-  StyleSheet,
-  View
-} from 'react-native';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
 import reducer from './redux';
-import Chart from './containers/chart';
-import Ranges from './containers/ranges';
-import List from './containers/list';
+import List from './screens/list';
+import Add from './screens/add';
+import { StackNavigator } from 'react-navigation';
+
+// Type navigation object that's being passed to every screen by react-navigation
+export type Navigation = {
+  navigate: (screen: string, params?: Object) => void,
+  goBack: () => void,
+  state: {
+    routeName: string,
+    params?: Object,
+  }
+};
 
 const store = createStore(
   reducer,
   composeWithDevTools(applyMiddleware(thunk)),
 );
 
+// Configure navigation
+const Screens = StackNavigator({
+  list: { screen: List }, // list with the chart
+  add: { screen: Add },   // add new coin screen
+}, {
+  mode: 'modal',      // Add screen slides up from the bottom
+  headerMode: 'none', // disable headers
+});
+
 export default class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <View style={styles.container}>
-          <Chart />
-          <Ranges />
-          <List />
-        </View>
+        <Screens />
       </Provider>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,        // take up the whole screen
-    paddingTop: 20, // put content below status bar
-  },
-});

@@ -27,6 +27,7 @@ type Coin = {
 type Action =
   | { type: 'LOADING_PRICES' }
   | { type: 'SELECTED_COIN', symbol: string }
+  | { type: 'ADDED_COIN', symbol: string, name: string }
   | { type: 'UPDATED_24H_AGO_PRICE', symbol: string, price: number }
   | { type: 'UPDATED_PRICES',
       response: {
@@ -67,6 +68,16 @@ const initialState: State = {
 // -----------------------------------------------------------------------------
 // Actions
 // -----------------------------------------------------------------------------
+
+// Add a coin
+export const addCoin = (symbol: string, name: string): ThunkAction => async dispatch => {
+  dispatch({
+    type: 'ADDED_COIN',
+    symbol,
+    name,
+  });
+  dispatch(updatePrices());
+};
 
 // Select a coin
 export const selectCoin = (symbol: string): Action => ({
@@ -160,6 +171,24 @@ export default function reducer(state: State = initialState, action: Action) {
             // don't change any values if didn't match
           })
         })),
+      };
+    }
+
+    // Add new coin
+    case 'ADDED_COIN': {
+      const { symbol, name } = action;
+
+      // Coin is already in the list
+      if (state.list.find(coin => coin.symbol === symbol)) {
+        return state;
+      }
+
+      return {
+        ...state,
+        list: [
+          ...state.list,
+          { symbol, name },
+        ],
       };
     }
 
